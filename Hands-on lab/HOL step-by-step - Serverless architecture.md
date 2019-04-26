@@ -37,9 +37,8 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/legal/intellec
     - [Task 2: Configure the Azure Cosmos DB Account](#task-2-provision-the-azure-cosmos-db-account)
   - [Exercise 2: Develop and publish the photo processing and data export functions](#exercise-2-develop-and-publish-the-photo-processing-and-data-export-functions)
     - [Help references](#help-references-1)
-    - [Task 1: Configure application settings](#task-1-configure-application-settings)
-    - [Task 2: Finish the ProcessImage function](#task-2-finish-the-processimage-function)
-    - [Task 3: Publish the Function App from Visual Studio](#task-3-publish-the-function-app-from-visual-studio)
+    - [Task 1: Finish the ProcessImage function](#task-1-finish-the-processimage-function)
+    - [Task 2: Publish the Function App from Visual Studio](#task-2-publish-the-function-app-from-visual-studio)
   - [Exercise 3: Create functions in the portal](#exercise-3-create-functions-in-the-portal)
     - [Help references](#help-references-2)
     - [Task 1: Create function to save license plate data to Azure Cosmos DB](#task-1-create-function-to-save-license-plate-data-to-azure-cosmos-db)
@@ -51,10 +50,6 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/legal/intellec
     - [Task 7: Configure custom event types for the new Event Grid subscriptions](#task-7-configure-custom-event-types-for-the-new-event-grid-subscriptions)
   - [Exercise 4: Monitor your functions with Application Insights](#exercise-4-monitor-your-functions-with-application-insights)
     - [Help references](#help-references-3)
-    - [Task 1: Provision an Application Insights instance](#task-1-provision-an-application-insights-instance)
-    - [Task 2: Enable Application Insights integration in your Function Apps](#task-2-enable-application-insights-integration-in-your-function-apps)
-    - [Task 3: Use the Live Metrics Stream to monitor functions in real time](#task-3-use-the-live-metrics-stream-to-monitor-functions-in-real-time)
-    - [Task 4: Observe your functions dynamically scaling when resource-constrained](#task-4-observe-your-functions-dynamically-scaling-when-resource-constrained)
   - [Exercise 5: Explore your data in Azure Cosmos DB](#exercise-5-explore-your-data-in-azure-cosmos-db)
     - [Help references](#help-references-4)
     - [Task 1: Use the Azure Cosmos DB Data Explorer](#task-1-use-the-azure-cosmos-db-data-explorer)
@@ -184,7 +179,7 @@ In this exercise, you will provision a blob storage account using the Hot tier, 
 
 ## Exercise 2: Develop and publish the photo processing and data export functions
 
-**Duration**: 45 minutes
+**Duration**: 30 minutes
 
 Use Visual Studio 2017/2019 and its integrated Azure Functions tooling to develop and debug the functions locally, and then publish them to Azure. The starter project solution, TollBooths, contains most of the code needed. You will add in the missing code before deploying to Azure.
 
@@ -195,49 +190,7 @@ Use Visual Studio 2017/2019 and its integrated Azure Functions tooling to develo
 | **Description**                       |                               **Links**                                |
 | Code and test Azure Functions locally | <https://docs.microsoft.com/azure/azure-functions/functions-run-local> |
 
-### Task 1: Configure application settings
-
-In this task, you will apply application settings using the Microsoft Azure Portal. You will then add the application settings to the TollBooth Starter Project.
-
-1.  Using a new tab or instance of your browser navigate to the Azure Management portal, <http://portal.azure.com>.
-
-2.  Open the **ServerlessArchitecture** resource group, and then select the Azure Function App you created whose name ends with **FunctionApp**. This is the one you created using the **.NET** runtime stack. If you did not use this naming convention, that's fine. Just be sure to make note of the name so you can distinguish it from the Function App you will be developing using the portal later on.
-
-    ![In the ServerlessArchtecture resource group, TollBoothFunctionApp is selected.](media/image33.png 'ServerlessArchtecture resource group')
-
-3.  Select **Application settings** on the Overview pane.
-
-    ![In the TollBoothFunctionApp blade, under Configured features, Application settings is selected.](media/image34.png 'TollBoothFunctionApp blade')
-
-4.  Scroll down to the **Application settings** section. Use the **+ Add new setting** link to create the following additional Key/Value pairs (the key names must exactly match those found in the table below):
-
-|                          |                                                                                                                                                              |
-| ------------------------ | :----------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| **Application Key**      |                                                                          **Value**                                                                           |
-| computerVisionApiUrl     | Computer Vision API endpoint you copied earlier. Append **vision/v2.0/ocr** to the end. Example:  https://westus.api.cognitive.microsoft.com/vision/v2.0/ocr |
-| computerVisionApiKey     |                                                                   Computer Vision API key                                                                    |
-| eventGridTopicEndpoint   |                                                                  Event Grid Topic endpoint                                                                   |
-| eventGridTopicKey        |                                                                 Event Grid Topic access key                                                                  |
-| cosmosDBEndPointUrl      |                                                                        Cosmos DB URI                                                                         |
-| cosmosDBAuthorizationKey |                                                                    Cosmos DB Primary Key                                                                     |
-| cosmosDBDatabaseId       |                                                            Cosmos DB database id (LicensePlates)                                                             |
-| cosmosDBCollectionId     |                                                        Cosmos DB processed collection id (Processed)                                                         |
-| exportCsvContainerName   |                                                       Blob storage CSV export container name (export)                                                        |
-| blobStorageConnection    |                                                                Blob storage connection string                                                                |
-
-![In the Application Settings section, the previously mentioned key / value pairs are called out with a purple line.](media/image35.png 'ApplicationSettings section')
-
-5.  Select **Save**.
-
-    ![Screenshot of the Save icon.](media/image36.png 'Save icon')
-
-6.  _Optional steps_, only if you wish to debug the functions locally on your development machine:
-
-    a. Update the local.settings.json file with the same values.
-
-    b. Update the AzureWebJobsStorage and AzureWebJobsDashboard values in local.settings.json with those found under Application settings for the Function App. Save your changes.
-
-### Task 2: Finish the ProcessImage function
+### Task 1: Finish the ProcessImage function
 
 There are a few components within the starter project that must be completed, marked as TODO in the code. The first set of TODO items we will address are in the ProcessImage function, the FindLicensePlateText class that calls the Computer Vision API, and finally the SendToEventGrid.cs class, which is responsible for sending processing results to the Event Grid topic you created earlier.
 
@@ -285,7 +238,7 @@ await Send("savePlateData", "TollBooth/CustomerService", data);
 await Send("queuePlateForManualCheckup", "TollBooth/CustomerService", data);
 ```
 
-### Task 3: Publish the Function App from Visual Studio
+### Task 2: Publish the Function App from Visual Studio
 
 In this task, you will publish the Function App from the starter project in Visual Studio to the existing Function App you provisioned in Azure.
 
@@ -611,7 +564,7 @@ Exercise removed for speed :)
 
 **Duration**: 15 minutes
 
-In this exercise, you will use the Azure Cosmos DB Data Explorer in the portal to view saved license plate data. It is entirely optional and can be safely skipped.
+In this exercise, you will use the Azure Cosmos DB Data Explorer in the portal to view saved license plate data. It is entirely optional and can be safely skipped or left to the end.
 
 ### Help references
 
@@ -764,7 +717,7 @@ In this exercise, you create a new Logic App for your data export workflow. This
 
 **Duration**: 10 minutes
 
-Removed for speed. We'll just use right-click deploy again :)
+Azure DevOps removed for speed. We'll just use right-click deploy again :)
 
 ### Task 1: Finish your ExportLicensePlates function code and redeploy
 
@@ -802,7 +755,7 @@ await blob.UploadFromStreamAsync(stream);
 
 9.  Save your changes.
 
-10. Re-publish the app as you did before.
+10. Re-publish the app as you did before in Exercise 2.
 
 ## Exercise 8: Rerun the workflow and verify data export
 
