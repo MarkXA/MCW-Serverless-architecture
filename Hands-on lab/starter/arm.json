@@ -1,0 +1,266 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "suffix": {
+            "type": "string"
+        }
+    },
+    "variables": {
+        "funcNetName": "[concat('bbc-func-net-', parameters('suffix'))]",
+        "funcNodeName": "[concat('bbc-func-node-', parameters('suffix'))]",
+        "planNetName": "[concat('bbc-funcplan-net-', parameters('suffix'))]",
+        "planNodeName": "[concat('bbc-funcplan-node-', parameters('suffix'))]",
+        "storageNetName": "[concat('bbcfuncnet', parameters('suffix'))]",
+        "storageNodeName": "[concat('bbcfuncnode', parameters('suffix'))]",
+        "eventGridName": "[concat('bbc-events-', parameters('suffix'))]",
+        "blobStorageName": "[concat('bbcblobs', parameters('suffix'))]",
+        "visionName": "[concat('bbc-ocr-', parameters('suffix'))]",
+        "cosmosName": "[concat('bbccosmos', parameters('suffix'))]",
+        "insightsName": "[concat('bbc-insights-', parameters('suffix'))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.CognitiveServices/accounts",
+            "apiVersion": "2016-02-01-preview",
+            "name": "[variables('visionName')]",
+            "location": "northeurope",
+            "sku": {
+                "name": "S1"
+            },
+            "kind": "ComputerVision",
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts",
+            "apiVersion": "2015-04-08",
+            "name": "[variables('cosmosName')]",
+            "location": "northeurope",
+            "properties": {
+                "databaseAccountOfferType": "Standard",
+                "locations": [
+                    {
+                        "locationName": "northeurope"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.EventGrid/topics",
+            "apiVersion": "2018-01-01",
+            "name": "[variables('eventGridName')]",
+            "location": "northeurope",
+            "properties": {}
+        },
+        {
+            "type": "microsoft.insights/components",
+            "apiVersion": "2015-05-01",
+            "name": "[variables('insightsName')]",
+            "location": "northeurope",
+            "kind": "web",
+            "properties": {
+                "Application_Type": "web",
+                "Flow_Type": "Bluefield",
+                "Request_Source": "rest",
+                "ApplicationId": "[variables('insightsName')]"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2018-07-01",
+            "name": "[variables('storageNetName')]",
+            "location": "northeurope",
+            "kind": "Storage",
+            "sku": {
+                "name": "Standard_LRS"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2018-07-01",
+            "name": "[variables('storageNodeName')]",
+            "location": "northeurope",
+            "kind": "Storage",
+            "sku": {
+                "name": "Standard_LRS"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2018-07-01",
+            "name": "[variables('blobStorageName')]",
+            "location": "northeurope",
+            "kind": "BlobStorage",
+            "sku": {
+                "name": "Standard_LRS"
+            },
+            "properties": {
+                "accessTier": "Hot"
+            }
+        },
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2015-04-01",
+            "name": "[variables('planNetName')]",
+            "location": "northeurope",
+            "properties": {
+                "name": "[variables('planNetName')]",
+                "computeMode": "Dynamic",
+                "sku": "Dynamic"
+            }
+        },
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2015-04-01",
+            "name": "[variables('planNodeName')]",
+            "location": "northeurope",
+            "properties": {
+                "name": "[variables('planNodeName')]",
+                "computeMode": "Dynamic",
+                "sku": "Dynamic"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2015-08-01",
+            "name": "[variables('funcNetName')]",
+            "location": "northeurope",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', variables('planNetName'))]",
+                "[resourceId('Microsoft.CognitiveServices/accounts', variables('visionName'))]",
+                "[resourceId('Microsoft.EventGrid/topics', variables('eventGridName'))]",
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosName'))]",
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageNetName'))]",
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('blobStorageName'))]",
+                "[resourceId('microsoft.insights/components', variables('insightsName'))]"
+            ],
+            "kind": "functionapp",
+            "properties": {
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('planNetName'))]",
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "computerVisionApiUrl",
+                            "value": "[concat(reference(resourceId('Microsoft.CognitiveServices/accounts', variables('visionName')), '2017-04-18').endpoint, 'vision/v2.0/ocr')]"
+                        },
+                        {
+                            "name": "computerVisionApiKey",
+                            "value": "[listKeys(variables('visionName'),'2017-04-18').key1]"
+                        },
+                        {
+                            "name": "eventGridTopicEndpoint",
+                            "value": "[reference(resourceId('Microsoft.EventGrid/topics', variables('eventGridName')), '2019-01-01').endpoint]"
+                        },
+                        {
+                            "name": "eventGridTopicKey",
+                            "value": "[listKeys(variables('eventGridName'),'2019-01-01').key1]"
+                        },
+                        {
+                            "name": "cosmosDBEndPointUrl",
+                            "value": "[reference(resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosName')), '2016-03-31').documentEndpoint]"
+                        },
+                        {
+                            "name": "cosmosDBAuthorizationKey",
+                            "value": "[listKeys(variables('cosmosName'),'2016-03-31').primaryMasterKey]"
+                        },
+                        {
+                            "name": "cosmosDBDatabaseId",
+                            "value": "LicensePlates"
+                        },
+                        {
+                            "name": "cosmosDBCollectionId",
+                            "value": "Processed"
+                        },
+                        {
+                            "name": "exportCsvContainerName",
+                            "value": "export"
+                        },
+                        {
+                            "name": "blobStorageConnection",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('blobStorageName'), ';AccountKey=', listKeys(variables('blobStorageName'),'2015-05-01-preview').key1)]"
+                        },
+                        {
+                            "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                            "value": "[reference(resourceId('microsoft.insights/components', variables('insightsName')), '2015-05-01').InstrumentationKey]"
+                        },
+                        {
+                            "name": "AzureWebJobsDashboard",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageNetName'), ';AccountKey=', listKeys(variables('storageNetName'),'2015-05-01-preview').key1)]"
+                        },
+                        {
+                            "name": "AzureWebJobsStorage",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageNetName'), ';AccountKey=', listKeys(variables('storageNetName'),'2015-05-01-preview').key1)]"
+                        },
+                        {
+                            "name": "FUNCTIONS_EXTENSION_VERSION",
+                            "value": "~2"
+                        },
+                        {
+                            "name": "FUNCTIONS_WORKER_RUNTIME",
+                            "value": "dotnet"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageNetName'), ';AccountKey=', listKeys(variables('storageNetName'),'2015-05-01-preview').key1)]"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTSHARE",
+                            "value": "[toLower(variables('funcNetName'))]"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2015-08-01",
+            "name": "[variables('funcNodeName')]",
+            "location": "northeurope",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', variables('planNodeName'))]",
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageNodeName'))]",
+                "[resourceId('microsoft.insights/components', variables('insightsName'))]"
+            ],
+            "kind": "functionapp",
+            "properties": {
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('planNodeName'))]",
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                            "value": "[reference(resourceId('microsoft.insights/components/', variables('insightsName')), '2015-05-01').InstrumentationKey]"
+                        },
+                        {
+                            "name": "AzureWebJobsDashboard",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageNodeName'), ';AccountKey=', listKeys(variables('storageNodeName'),'2015-05-01-preview').key1)]"
+                        },
+                        {
+                            "name": "AzureWebJobsStorage",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageNodeName'), ';AccountKey=', listKeys(variables('storageNodeName'),'2015-05-01-preview').key1)]"
+                        },
+                        {
+                            "name": "FUNCTIONS_EXTENSION_VERSION",
+                            "value": "~2"
+                        },
+                        {
+                            "name": "FUNCTIONS_WORKER_RUNTIME",
+                            "value": "node"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageNodeName'), ';AccountKey=', listKeys(variables('storageNodeName'),'2015-05-01-preview').key1)]"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTSHARE",
+                            "value": "[toLower(variables('funcNodeName'))]"
+                        },
+                        {
+                            "name": "WEBSITE_NODE_DEFAULT_VERSION",
+                            "value": "10.14.1"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}
