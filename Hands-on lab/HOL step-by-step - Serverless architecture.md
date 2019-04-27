@@ -48,8 +48,7 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/legal/intellec
     - [Task 5: Add an Event Grid subscription to the QueuePlateForManualCheckup function](#task-5-add-an-event-grid-subscription-to-the-queueplateformanualcheckup-function)
     - [Task 6: Add an Azure Cosmos DB output to the QueuePlateForManualCheckup function](#task-6-add-an-azure-cosmos-db-output-to-the-queueplateformanualcheckup-function)
     - [Task 7: Configure custom event types for the new Event Grid subscriptions](#task-7-configure-custom-event-types-for-the-new-event-grid-subscriptions)
-  - [Exercise 4: Monitor your functions with Application Insights](#exercise-4-monitor-your-functions-with-application-insights)
-    - [Help references](#help-references-3)
+  - [Exercise 4: Upload images](#exercise-4-upload-images)
   - [Exercise 5: Explore your data in Azure Cosmos DB](#exercise-5-explore-your-data-in-azure-cosmos-db)
     - [Help references](#help-references-4)
     - [Task 1: Use the Azure Cosmos DB Data Explorer](#task-1-use-the-azure-cosmos-db-data-explorer)
@@ -566,11 +565,29 @@ In this task, you will configure a custom event type for each new Event Grid sub
 
 10. Select **Save**.
 
-## Exercise 4: Monitor your functions with Application Insights
+## Exercise 4: Upload images
 
-**Duration**: 0 minutes
+**Duration**: 10 minutes
 
-Exercise removed for speed :)
+1.  Navigate to the **UploadImages** project using the Solution Explorer of Visual Studio.
+
+    ![In Solution Explorer, UploadImages is expanded, and App.config is selected.](media/image66.png 'Solution Explorer')
+
+2.  Open **App.config**.
+
+3.  In App.config, update the **blobStorageConnection** appSetting value to the connection string for your Blob storage account.
+
+    ![On the App.config tab, a connection string is circled. To the side of the string is a green bar, and a hammer icon.](media/image67.png 'App.config tab')
+
+4.  Save your changes to the file.
+
+5.  Right-click the **UploadImages** project in the Solution Explorer, then select **Debug** then **Start new instance**.
+
+    ![In Solution Explorer, UploadImages is selected. From the Debug menu, Start new instance is selected.](media/image68.png 'Solution Explorer')
+
+6.  When the console window appears, enter **1** and press **ENTER**. This uploads a handful of car photos to the images container of your Blob storage account.
+
+    ![A Command prompt window displays, showing images being uploaded.](media/image69.png 'Command prompt window')
 
 ## Exercise 5: Explore your data in Azure Cosmos DB
 
