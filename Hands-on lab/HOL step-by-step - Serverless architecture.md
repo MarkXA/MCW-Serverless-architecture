@@ -177,6 +177,18 @@ In this exercise, you will provision a blob storage account using the Hot tier, 
 
 7. Select **OK**.
 
+### Task 3: Create blob storage containers
+
+1.  Navigate to the blob storage account in the Azure Portal. 
+
+2.  Select **Blobs** under **Blob Service** in the menu. Then select the **+ Container** button to add a new container. In the **Name** field, enter **images**, select **Private (no anonymous access)** for the public access level, then select **OK** to save.
+
+    ![In the Storage blade, under Settings, Containers is selected. In the Containers blade, the + (add icon) Container button is selected. Below, the Name field displays images, and the Public access level is set to Private (no anonymous access).](media/image16.png 'Storage and Containers blade')
+
+3.  Repeat these steps to create a container named **export**.
+
+    ![In the Storage blade, under Settings, Containers is selected. In the Containers blade, the + (add icon) Container button is selected. Below, the Name field displays export, and the Public access level is set to Private (no anonymous access).](media/new-container-export.png 'Storage and Containers blade')
+
 ## Exercise 2: Develop and publish the photo processing and data export functions
 
 **Duration**: 30 minutes
