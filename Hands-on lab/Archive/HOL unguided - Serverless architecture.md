@@ -20,7 +20,7 @@ The names of manufacturers, products, or URLs are provided for informational pur
 
 © 2018 Microsoft Corporation. All rights reserved.
 
-Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/intellectualproperty/Trademarks/Usage/General.aspx> are trademarks of the Microsoft group of companies. All other trademarks are the property of their respective owners.
+Microsoft and the trademarks listed at <https://www.microsoft.com/legal/intellectualproperty/Trademarks/Usage/General.aspx> are trademarks of the Microsoft group of companies. All other trademarks are the property of their respective owners.
 
 **Contents**
 
@@ -156,11 +156,11 @@ The solution begins with vehicle photos being uploaded to an Azure Storage blobs
 
 2.  Local machine or a virtual machine configured with (**complete the day before the lab!**):
 
-    a. Visual Studio Community 2017 or greater, **version 15.4** or later
+    a. Visual Studio Community 2019 or greater
 
     1.  <https://www.visualstudio.com/vs/>
 
-    b. Azure development workload for Visual Studio 2017
+    b. Azure development workload for Visual Studio
 
     1.  <https://docs.microsoft.com/azure/azure-functions/functions-develop-vs#prerequisites>
 
@@ -189,10 +189,10 @@ In this exercise, you will provision a blob storage account using the Hot tier, 
 |                                            |                                                                                                                                                             |
 | ------------------------------------------ | :---------------------------------------------------------------------------------------------------------------------------------------------------------: |
 | **Description**                            |                                                                          **Links**                                                                          |
-| Creating a storage account (blob hot tier) | <https://docs.microsoft.com/en-us/azure/storage/common/storage-create-storage-account?toc=%2fazure%2fstorage%2fblobs%2ftoc.json%23create-a-storage-account> |
-| Creating a function app                    |                   <https://docs.microsoft.com/en-us/azure/azure-functions/functions-create-first-azure-function%23create-a-function-app>                    |
-| Concepts in Event Grid                     |                                                <https://docs.microsoft.com/en-us/azure/event-grid/concepts>                                                 |
-| Creating an Azure Cosmos DB account        |                   <https://docs.microsoft.com/en-us/azure/cosmos-db/tutorial-develop-sql-api-dotnet%23create-an-azure-cosmos-db-account>                    |
+| Creating a storage account (blob hot tier) | <https://docs.microsoft.com/azure/storage/common/storage-create-storage-account?toc=%2fazure%2fstorage%2fblobs%2ftoc.json%23create-a-storage-account> |
+| Creating a function app                    |                   <https://docs.microsoft.com/azure/azure-functions/functions-create-first-azure-function%23create-a-function-app>                    |
+| Concepts in Event Grid                     |                                                <https://docs.microsoft.com/azure/event-grid/concepts>                                                 |
+| Creating an Azure Cosmos DB account        |                   <https://docs.microsoft.com/azure/cosmos-db/tutorial-develop-sql-api-dotnet%23create-an-azure-cosmos-db-account>                    |
 
 ### Task 1: Provision the storage account
 
@@ -276,14 +276,14 @@ The Computer Vision API will provide OCR capability on-demand from your ProcessI
 
 **Duration**: 45 minutes
 
-Use Visual Studio 2017 and its integrated Azure Functions tooling to develop and debug the functions locally, then publish them to Azure. The starter project solution, TollBooths, contains most of the code needed. You will add in the missing code before deploying to Azure.
+Use Visual Studio and its integrated Azure Functions tooling to develop and debug the functions locally, then publish them to Azure. The starter project solution, TollBooths, contains most of the code needed. You will add in the missing code before deploying to Azure.
 
 ### Help references
 
 |                                       |                                                                              |
 | ------------------------------------- | :--------------------------------------------------------------------------: |
 | **Description**                       |                                  **Links**                                   |
-| Code and test Azure Functions locally | <https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local> |
+| Code and test Azure Functions locally | <https://docs.microsoft.com/azure/azure-functions/functions-run-local> |
 
 ### Task 1: Configure application settings
 
@@ -362,8 +362,8 @@ Create two new Azure Functions written in Node.js, using the Azure portal. These
 |                                                                   |                                                                                                               |
 | ----------------------------------------------------------------- | :-----------------------------------------------------------------------------------------------------------: |
 | **Description**                                                   |                                                   **Links**                                                   |
-| Create your first function in the Azure portal                    |        <https://docs.microsoft.com/en-us/azure/azure-functions/functions-create-first-azure-function>         |
-| Store unstructured data using Azure Functions and Azure Cosmos DB | <https://docs.microsoft.com/en-us/azure/azure-functions/functions-integrate-store-unstructured-data-cosmosdb> |
+| Create your first function in the Azure portal                    |        <https://docs.microsoft.com/azure/azure-functions/functions-create-first-azure-function>         |
+| Store unstructured data using Azure Functions and Azure Cosmos DB | <https://docs.microsoft.com/azure/azure-functions/functions-integrate-store-unstructured-data-cosmosdb> |
 
 ### Task 1: Create function to save license plate data to Azure Cosmos DB
 
@@ -508,8 +508,8 @@ Application Insights can be integrated with Azure Function Apps to provide robus
 |                                                               |                                                                                        |
 | ------------------------------------------------------------- | :------------------------------------------------------------------------------------: |
 | **Description**                                               |                                       **Links**                                        |
-| Monitor Azure Functions using Application Insights            |     <https://docs.microsoft.com/en-us/azure/azure-functions/functions-monitoring>      |
-| Live Metrics Stream: Monitor & Diagnose with 1-second latency | <https://docs.microsoft.com/en-us/azure/application-insights/app-insights-live-stream> |
+| Monitor Azure Functions using Application Insights            |     <https://docs.microsoft.com/azure/azure-functions/functions-monitoring>      |
+| Live Metrics Stream: Monitor & Diagnose with 1-second latency | <https://docs.microsoft.com/azure/application-insights/app-insights-live-stream> |
 
 ### Task 1: Provision an Application Insights instance
 
@@ -578,7 +578,7 @@ In this exercise, you will use the Azure Cosmos DB Data Explorer in the portal t
 |                       |                                                                 |
 | --------------------- | :-------------------------------------------------------------: |
 | **Description**       |                            **Links**                            |
-| About Azure Cosmos DB | <https://docs.microsoft.com/en-us/azure/cosmos-db/introduction> |
+| About Azure Cosmos DB | <https://docs.microsoft.com/azure/cosmos-db/introduction> |
 
 ### Task 1: Use the Azure Cosmos DB Data Explorer
 
@@ -613,8 +613,8 @@ In this exercise, you create a new Logic App for your data export workflow. This
 |                                      |                                                                                                                       |
 | ------------------------------------ | :-------------------------------------------------------------------------------------------------------------------: |
 | **Description**                      |                                                       **Links**                                                       |
-| What are Logic Apps?                 |                  <https://docs.microsoft.com/en-us/azure/logic-apps/logic-apps-what-are-logic-apps>                   |
-| Call Azure Functions from logic apps | <https://docs.microsoft.com/en-us/azure/logic-apps/logic-apps-azure-functions%23call-azure-functions-from-logic-apps> |
+| What are Logic Apps?                 |                  <https://docs.microsoft.com/azure/logic-apps/logic-apps-what-are-logic-apps>                   |
+| Call Azure Functions from logic apps | <https://docs.microsoft.com/azure/logic-apps/logic-apps-azure-functions%23call-azure-functions-from-logic-apps> |
 
 ### Task 1: Create the Logic App
 
@@ -654,7 +654,7 @@ In this exercise, configure your Function App that contains the ProcessImages fu
 | ----------------------------------------- | :--------------------------------------------------------------------------------------: |
 | **Description**                           |                                        **Links**                                         |
 | Creating a new GitHub repository          |              <https://help.github.com/articles/creating-a-new-repository/>               |
-| Continuous deployment for Azure Functions | <https://docs.microsoft.com/en-us/azure/azure-functions/functions-continuous-deployment> |
+| Continuous deployment for Azure Functions | <https://docs.microsoft.com/azure/azure-functions/functions-continuous-deployment> |
 
 ### Task 1: Create a GitHub repository
 

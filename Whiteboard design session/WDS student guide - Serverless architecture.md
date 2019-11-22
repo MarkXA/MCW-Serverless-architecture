@@ -1,4 +1,4 @@
-![](https://github.com/Microsoft/MCW-Template-Cloud-Workshop/raw/master/Media/ms-cloud-workshop.png "Microsoft Cloud Workshops")
+![](https://github.com/Microsoft/MCW-Template-Cloud-Workshop/raw/master/Media/ms-cloud-workshop.png 'Microsoft Cloud Workshops')
 
 <div class="MCWHeader1">
 Serverless architecture
@@ -9,7 +9,7 @@ Whiteboard design session student guide
 </div>
 
 <div class="MCWHeader3">
-March 2019
+November 2019
 </div>
 
 Information in this document, including URL and other Internet Web site references, is subject to change without notice. Unless otherwise noted, the example companies, organizations, products, domain names, e-mail addresses, logos, people, places, and events depicted herein are fictitious, and no association with any real company, organization, product, domain name, e-mail address, logo, person, place or event is intended or should be inferred. Complying with all applicable copyright laws is the responsibility of the user. Without limiting the rights under copyright, no part of this document may be reproduced, stored in or introduced into a retrieval system, or transmitted in any form or by any means (electronic, mechanical, photocopying, recording, or otherwise), or for any purpose, without the express written permission of Microsoft Corporation.
@@ -20,7 +20,7 @@ The names of manufacturers, products, or URLs are provided for informational pur
 
 © 2019 Microsoft Corporation. All rights reserved.
 
-Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/intellectualproperty/Trademarks/Usage/General.aspx> are trademarks of the Microsoft group of companies. All other trademarks are the property of their respective owners.
+Microsoft and the trademarks listed at <https://www.microsoft.com/legal/intellectualproperty/Trademarks/Usage/General.aspx> are trademarks of the Microsoft group of companies. All other trademarks are the property of their respective owners.
 
 **Contents**
 
@@ -42,12 +42,13 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
 
 # Serverless architecture whiteboard design session student guide
 
-## Abstract and learning objectives 
+## Abstract and learning objectives
 
 In this whiteboard design session, you will work with a group to design a solution for processing vehicle photos as they are uploaded to a storage account, using serverless technologies on Azure. The license plate data needs to be extracted and stored in a highly available NoSQL data store for exporting. The data export process will be orchestrated by a serverless Azure component that coordinates exporting new license plate data to file storage and sending notifications as needed. You will also configure a Continuous Deployment process to automatically publish new changes to Function Apps. Finally, the entire processing pipeline will need to be monitored, with particular attention paid to components scaling to meet processing demand.
 
 At the end of this whiteboard design session, you will have gained insight on how best to take advantage of the new serverless wave by designing a highly scalable and cost-effective solution that requires very little code and virtually no infrastructure, compared to traditional hosted web applications and services.
-## Step 1: Review the customer case study 
+
+## Step 1: Review the customer case study
 
 **Outcome**
 
@@ -57,13 +58,14 @@ Timeframe: 15 minutes
 
 Directions: With all participants in the session, the facilitator/SME presents an overview of the customer case study along with technical tips.
 
-1.  Meet your table participants and trainer.
+1. Meet your table participants and trainer.
 
-2.  Read all of the directions for steps 1-3 in the student guide.
+2. Read all of the directions for steps 1-3 in the student guide.
 
-3.  As a table team, review the following customer case study.
+3. As a table team, review the following customer case study.
 
 ### Customer situation
+
 Contoso, Ltd. was founded in 2011 in Houston, Texas, and provides custom software development solutions for a number of clients. In addition to custom software development, they also have developed a financial billing and payment suite of software aimed at several vertical markets, from e-commerce to medical, financial services. They have recently added toll road booth management, as a new market opportunity opened to handle vehicle tracking and toll billing near their home office. Since this new business venture was a minor addition to their impressive portfolio of billing services, they have not dedicated significant resources to the vehicle processing portion of their custom-built TollBooth software suite. The most feature-rich component of this software suite is their existing payment management system that has been expanded to send bills to drivers after passing through any number of the managed toll booths. Included in the bill are a date/time stamp, toll booth location, and a photo of the vehicle as it passed through the booth.
 
 Because so few resources were applied to the TollBooth software, which was meant to handle just a handful of local toll booths, Contoso has been using a manual process to identify license plates and send that data to their billing software. As a car passes through a toll booth, a medium resolution image is taken of the car to identify its license plate numbers/characters which will ultimately be used to look up and bill the customer. Currently, they periodically package and send those images to a third-party vendor, who manually identifies the license plate numbers and sends the list back to Contoso when they are done. At this point, Contoso collects batches of 1,000 transactions, saves the information to a CSV file hosted by an FTP server, where their downstream accounting system extracts the license plate information and bills the customer.
@@ -90,35 +92,37 @@ As a stretch goal, Contoso would like to know that the license processing pipeli
 
 ### Customer needs
 
-1.  Replace manual process with a reliable, automated solution using serverless components.
+1. Replace manual process with a reliable, automated solution using serverless components.
 
-2.  Take advantage of a machine learning service that would allow them to accurately detect license plate numbers without needing artificial intelligence expertise.
+2. Take advantage of a machine learning service that would allow them to accurately detect license plate numbers without needing artificial intelligence expertise.
 
-3.  Mechanism for manually entering license plate images that could not be processed.
+3. Mechanism for manually entering license plate images that could not be processed.
 
-4.  Have a solution that can scale to any number of cars that pass through all toll booths, handling unforeseen traffic conditions that cause unexpected spikes in processed images.
+4. Have a solution that can scale to any number of cars that pass through all toll booths, handling unforeseen traffic conditions that cause unexpected spikes in processed images.
 
-5.  Establish an automated workflow that periodically exports processed license plate data on a regular interval, and sends an alert email when no items are exported.
+5. Establish an automated workflow that periodically exports processed license plate data on a regular interval, and sends an alert email when no items are exported.
 
-6.  Would like to locally develop the serverless components and establish an automated deployment pipeline from source control.
+6. Would like to locally develop the serverless components and establish an automated deployment pipeline from source control.
 
-7.  Use a monitoring dashboard that can provide a real-time view of serverless components, historical telemetry data for deeper analysis, and supports custom alerts.
+7. Use a monitoring dashboard that can provide a real-time view of serverless components, historical telemetry data for deeper analysis, and supports custom alerts.
 
-8.  Design an extensible solution that could support serverless batch and real-time analytics, as well as other scenarios in the future.
+8. Design an extensible solution that could support serverless batch and real-time analytics, as well as other scenarios in the future.
 
 ### Customer objections
 
-1.  We are concerned about how individual serverless components will be able to "talk" to each other and reliably pass messages through the pipeline.
+1. We are concerned about how individual serverless components will be able to "talk" to each other and reliably pass messages through the pipeline.
 
-2.  Will a serverless architecture that has the capacity to infinitely scale put us at risk for huge monthly bills?
+2. Will a serverless architecture that has the capacity to infinitely scale put us at risk for huge monthly bills?
 
-3.  How do we make sure that erroneous image processing does not make certain toll bills fall through the cracks or, even worse, send a bill to the wrong person?
+3. How do we make sure that erroneous image processing does not make certain toll bills fall through the cracks or, even worse, send a bill to the wrong person?
 
-4.  Is it possible to add a secure API that allows our customers to retrieve information about their vehicles plus captured photos? How do we protect our system from unauthorized access or an excessive number of requests?
+4. Is it possible to add a secure API that allows our customers to retrieve information about their vehicles plus captured photos? How do we protect our system from unauthorized access or an excessive number of requests?
+
+5. What is our best option to protect application secrets, such as connection strings, from being viewed by unauthorized users in the portal?
 
 ### Infographic for common scenarios
 
-![The Common Scenario diagram begins with an Internet icon on the left. Two arrows point from this icon to an Azure Storage Blobs Icon, and an Azure API Management icon. The Azure Storage Blobs icon points to an Azure functions icon, which in turn points to both a second Azure Functions icon (via an Event Grid arrow), and a second Azure Storage Blobs icon, which then points and ends at a Logic Apps icon. The Azure API Management icon points to two separate Azure Functions icon, which both point back to an Azure Cosmos DB icon, when then points to and ends at a Power BI icon.](images/Whiteboarddesignsessiontrainerguide-Serverlessarchitectureimages/media/image2.png 'Common Scenario diagram')
+![The Common Scenario diagram begins with an Internet icon on the left. Two arrows point from this icon to an Azure Storage Blobs Icon, and an Azure API Management icon. The Azure Storage Blobs icon points to an Azure functions icon, which in turn points to both a second Azure Functions icon (via an Event Grid arrow), and a second Azure Storage Blobs icon, which then points and ends at a Logic Apps icon. The Azure API Management icon points to two separate Azure Functions icon, which both point back to an Azure Cosmos DB icon, when then points to and ends at a Power BI icon.](media/common-scenarios.png 'Common Scenario diagram')
 
 ## Step 2: Design a proof of concept solution
 
@@ -130,67 +134,67 @@ Timeframe: 60 minutes
 
 **Business needs**
 
-Directions:  With all participants at your table, answer the following questions and list the answers on a flip chart:
+Directions: With all participants at your table, answer the following questions and list the answers on a flip chart:
 
-1.  Who should you present this solution to? Who is your target customer audience? Who are the decision makers?
+1. Who should you present this solution to? Who is your target customer audience? Who are the decision makers?
 
-2.  What customer business needs do you need to address with your solution?
+2. What customer business needs do you need to address with your solution?
 
 **Design**
 
 Directions: With all participants at your table, respond to the following questions on a flip chart:
 
-*High-level architecture*
+_High-level architecture_
 
-1.  Without getting into the details (the following sections will address the particular details), diagram your initial vision for handling the top-level requirements for the license plate processing serverless components, OCR capabilities, data export workflow, and monitoring plus DevOps.
+1. Without getting into the details (the following sections will address the particular details), diagram your initial vision for handling the top-level requirements for the license plate processing serverless components, OCR capabilities, data export workflow, and monitoring plus DevOps.
 
-*License plate processing serverless components*
+_License plate processing serverless components_
 
-1.  Which Azure messaging service would you recommend using to orchestrate event-driven activities between the serverless components?
+1. Which Azure messaging service would you recommend using to orchestrate event-driven activities between the serverless components?
 
-2.  What Azure service would you suggest Contoso use to execute custom business logic code when an event is triggered?
+2. What Azure service would you suggest Contoso use to execute custom business logic code when an event is triggered?
 
-3.  Which pricing tier for the service would you recommend that would automatically scale to handle demand while charging only for work that was performed?
+3. Which pricing tier for the service would you recommend that would automatically scale to handle demand while charging only for work that was performed?
 
-4.  How do you ensure that downstream components, such as machine learning APIs, databases, and file stores, are not overloaded by the potential high load created when your serverless components dynamically scale?
+4. How do you ensure that downstream components, such as machine learning APIs, databases, and file stores, are not overloaded by the potential high load created when your serverless components dynamically scale?
 
-5.  What Azure service would you recommend for storing the license plate data? Consider options that automatically scale to meet demand, and offer bindings to other serverless components that simplify connecting to and storing data within the data store.
+5. What Azure service would you recommend for storing the license plate data? Consider options that automatically scale to meet demand, and offer bindings to other serverless components that simplify connecting to and storing data within the data store.
 
-*License plate OCR*
+_License plate OCR_
 
-1.  What service would you recommend Contoso use to conduct license plate object character recognition (OCR) processing to extract the license plate number from each photo as it enters the system?
+1. What service would you recommend Contoso use to conduct license plate object character recognition (OCR) processing to extract the license plate number from each photo as it enters the system?
 
-2.  How would you integrate the OCR service to your license plate processing flow?
+2. How would you integrate the OCR service to your license plate processing flow?
 
-*Data export workflow*
+_Data export workflow_
 
-1.  What Azure service would you recommend to create an automated workflow that runs on a regular interval to export processed license plate data and send alerts as needed?
+1. What Azure service would you recommend to create an automated workflow that runs on a regular interval to export processed license plate data and send alerts as needed?
 
-2.  Which other services would you integrate into your workflow?
+2. Which other services would you integrate into your workflow?
 
-*Extensible serverless analytics*
+_Extensible serverless analytics_
 
-1.  Assuming they would like to be able to plug-in more solutions that respond to the event when a license plate has been successfully extracted from an image, how would you extend your solution using Event Grid? Be specific on the system topics, custom topics and subscriptions at play.
+1. Assuming they would like to be able to plug-in more solutions that respond to the event when a license plate has been successfully extracted from an image, how would you extend your solution using Event Grid? Be specific on the system topics, custom topics and subscriptions at play.
 
-2.  What pipeline would you plug-into an Event Grid subscription listening for license plate events that could be used to provide real-time and batch analytics as a serverless solution?
+2. What pipeline would you plug-into an Event Grid subscription listening for license plate events that could be used to provide real-time and batch analytics as a serverless solution?
 
-*Monitoring and DevOps*
+_Monitoring and DevOps_
 
-1.  What tools and services would you recommend Contoso use to develop the serverless components locally, synchronize with a source code repository, and implement continuous deployment?
+1. What tools and services would you recommend Contoso use to develop the serverless components locally, synchronize with a source code repository, and implement continuous deployment?
 
-2.  How would you monitor all the executing serverless components in real time from a single dashboard?
+2. How would you monitor all the executing serverless components in real time from a single dashboard?
 
-3.  Does your monitoring solution support exploring historical telemetry and configuring alerts?
+3. Does your monitoring solution support exploring historical telemetry and configuring alerts?
 
 **Prepare**
 
 Directions: With all participants at your table:
 
-1.  Identify any customer needs that are not addressed with the proposed solution.
+1. Identify any customer needs that are not addressed with the proposed solution.
 
-2.  Identify the benefits of your solution.
+2. Identify the benefits of your solution.
 
-3.  Determine how you will respond to the customer's objections.
+3. Determine how you will respond to the customer's objections.
 
 Prepare a 15-minute chalk-talk style presentation to the customer.
 
@@ -206,21 +210,21 @@ Timeframe: 30 minutes
 
 Directions:
 
-1.  Pair with another table.
+1. Pair with another table.
 
-2.  One table is the Microsoft team and the other table is the customer.
+2. One table is the Microsoft team and the other table is the customer.
 
-3.  The Microsoft team presents their proposed solution to the customer.
+3. The Microsoft team presents their proposed solution to the customer.
 
-4.  The customer makes one of the objections from the list of objections.
+4. The customer makes one of the objections from the list of objections.
 
-5.  The Microsoft team responds to the objection.
+5. The Microsoft team responds to the objection.
 
-6.  The customer team gives feedback to the Microsoft team.
+6. The customer team gives feedback to the Microsoft team.
 
-7.  Tables switch roles and repeat Steps 2-6.
+7. Tables switch roles and repeat Steps 2-6.
 
-##  Wrap-up 
+## Wrap-up
 
 Timeframe: 15 minutes
 
@@ -228,16 +232,18 @@ Directions: Tables reconvene with the larger group to hear the facilitator/SME s
 
 ## Additional references
 
-|                                                     |                                                                                                                       |
-| --------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------: |
-| **Description**                                     |                                                       **Links**                                                       |
-| Introduction to Azure Functions                     |                      <https://docs.microsoft.com/en-us/azure/azure-functions/functions-overview>                      |
-| What are Logic Apps?                                |                  <https://docs.microsoft.com/en-us/azure/logic-apps/logic-apps-what-are-logic-apps>                   |
-| About Azure Cosmos DB                               |                            <https://docs.microsoft.com/en-us/azure/cosmos-db/introduction>                            |
-| Choose between Azure services that deliver messages |                    <https://docs.microsoft.com/en-us/azure/event-grid/compare-messaging-services>                     |
-| Monitor Azure Functions using Application Insights  |                     <https://docs.microsoft.com/en-us/azure/azure-functions/functions-monitoring>                     |
-| Introduction to Azure Event Grid                    |                             <https://docs.microsoft.com/en-us/azure/event-grid/overview>                              |
-| Call Azure Functions from logic apps                | <https://docs.microsoft.com/en-us/azure/logic-apps/logic-apps-azure-functions%23call-azure-functions-from-logic-apps> |
-| Azure Cosmos DB + Azure Functions                   |                   <https://docs.microsoft.com/en-us/azure/cosmos-db/serverless-computing-database>                    |
-| Continuous deployment of Azure Functions            |               <https://docs.microsoft.com/en-us/azure/azure-functions/functions-continuous-deployment>                |
-| Code and test Azure Functions locally               |                     <https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local>                      |
+|                                                              |                                                                                                                           |
+| ------------------------------------------------------------ | :-----------------------------------------------------------------------------------------------------------------------: |
+| **Description**                                              |                                                         **Links**                                                         |
+| Introduction to Azure Functions                              |                           <https://docs.microsoft.com/azure/azure-functions/functions-overview>                           |
+| What are Logic Apps?                                         |                       <https://docs.microsoft.com/azure/logic-apps/logic-apps-what-are-logic-apps>                        |
+| About Azure Cosmos DB                                        |                                 <https://docs.microsoft.com/azure/cosmos-db/introduction>                                 |
+| Choose between Azure services that deliver messages          |                         <https://docs.microsoft.com/azure/event-grid/compare-messaging-services>                          |
+| Monitor Azure Functions using Application Insights           |                          <https://docs.microsoft.com/azure/azure-functions/functions-monitoring>                          |
+| Introduction to Azure Event Grid                             |                                  <https://docs.microsoft.com/azure/event-grid/overview>                                   |
+| Call Azure Functions from logic apps                         |      <https://docs.microsoft.com/azure/logic-apps/logic-apps-azure-functions%23call-azure-functions-from-logic-apps>      |
+| Azure Cosmos DB + Azure Functions                            |                        <https://docs.microsoft.com/azure/cosmos-db/serverless-computing-database>                         |
+| Continuous deployment of Azure Functions                     |                    <https://docs.microsoft.com/azure/azure-functions/functions-continuous-deployment>                     |
+| Code and test Azure Functions locally                        |                          <https://docs.microsoft.com/azure/azure-functions/functions-run-local>                           |
+| What is Azure Key Vault?                                     |                              <https://docs.microsoft.com/azure/key-vault/key-vault-overview>                              |
+| Use Key Vault references for App Service and Azure Functions | <https://docs.microsoft.com/azure/app-service/app-service-key-vault-references?toc=%2fazure%2fazure-functions%2ftoc.json> |
