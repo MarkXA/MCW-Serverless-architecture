@@ -81,21 +81,25 @@ You must provision a few resources in Azure before you start developing the solu
 
 ### Task 1: Provision the resources
 
-1. Using a new tab or instance of your browser, navigate to the Azure portal, <https://portal.azure.com>.
+1. **IF** you have the current release of Azure PowerShell:
+    - Open PowerShell on your PC.
 
-2. Open Cloud Shell using the leftmost icon in the top bar.
+2. **OTHERWISE**
+    - Using a new tab or instance of your browser, navigate to the Azure portal, <https://portal.azure.com>.
+    - Open Cloud Shell using the leftmost icon in the top bar.
+    - If a Bash shell opens, switch to PowerShell.
 
-3. If a Bash shell opens, switch to PowerShell.
+3. Clone the Git repository to your cloud drive: `git clone https://github.com/MarkXA/serverless-workshop.git`
 
-4. Clone the Git repository to your cloud drive: `git clone https://github.com/MarkXA/serverless-workshop.git`
+4. Change into the `Hands-on lab\starter` folder.
 
-5. Change into the `Hands-on lab\starter` folder.
+5. Run the `.\deploy.ps1` script.
 
-6. Run the `.\deploy.ps1` script.
+6. Supply the name of a resource group to create (e.g. serverless-workshop) and a unique suffix (e.g. your initals and some random digits).
 
-7. Supply the name of a resource group to create (e.g. serverless-workshop) and a unique suffix (e.g. your initals and some random digits).
+7. Wait for the script to complete. If there were errors, repeat the deployment (it will be quicker the second time!).
 
-8. Wait for the script to complete, then navigate to the newly created resource group (easiest way is to type the name in the portal search box).
+8. Navigate to the newly created resource group (easiest way is to type the name in the portal search box).
 
 9. Check that the following resources have been created:
 
