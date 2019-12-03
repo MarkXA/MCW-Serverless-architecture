@@ -1,9 +1,9 @@
 Param(
-  [Parameter(Mandatory=$False)]
-   [string]$ResourceGroupName = "notts1", 
+  [Parameter(Mandatory=$True)]
+   [string]$ResourceGroupName, 
 	
-   [Parameter(Mandatory=$False)]
-   [string]$ResourceSuffix = "mxa",
+   [Parameter(Mandatory=$True)]
+   [string]$ResourceSuffix,
 
    [Parameter()]
    [string]$Region = "northeurope"
