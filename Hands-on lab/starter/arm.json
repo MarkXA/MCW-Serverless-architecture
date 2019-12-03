@@ -37,7 +37,7 @@
       "name": "[variables('visionName')]",
       "location": "[variables('region')]",
       "sku": {
-        "name": "F0"
+        "name": "S1"
       },
       "kind": "ComputerVision",
       "properties": {}
