@@ -26,9 +26,7 @@
     "insightsName": "[concat('sw-insights-', parameters('suffix'))]",
     "keyVaultName": "[concat('sw-keys-', parameters('suffix'))]",
     "containers": "[createarray('Processed', 'NeedsManualReview')]",
-    "partitionKeys": "[createarray('/licensePlateText', '/fileName')]",
-    "funcNetIdentity": "[concat(resourceId('Microsoft.Web/sites', variables('funcNetName')), '/providers/Microsoft.ManagedIdentity/Identities/default')]",
-    "funcNodeIdentity": "[concat(resourceId('Microsoft.Web/sites', variables('funcNodeName')), '/providers/Microsoft.ManagedIdentity/Identities/default')]"
+    "partitionKeys": "[createarray('/licensePlateText', '/fileName')]"
   },
   "resources": [
     {
@@ -321,8 +319,8 @@
             }
           },
           {
-            "tenantId": "[reference(concat(resourceId('Microsoft.Web/sites', variables('funcNetName')), '/providers/Microsoft.ManagedIdentity/Identities/default'), '2015-08-31-PREVIEW').tenantId]",
-            "objectId": "[reference(concat(resourceId('Microsoft.Web/sites', variables('funcNetName')), '/providers/Microsoft.ManagedIdentity/Identities/default'), '2015-08-31-PREVIEW').principalId]",
+            "tenantId": "[reference(concat(resourceId('Microsoft.Web/sites', variables('funcNodeName')), '/providers/Microsoft.ManagedIdentity/Identities/default'), '2015-08-31-PREVIEW').tenantId]",
+            "objectId": "[reference(concat(resourceId('Microsoft.Web/sites', variables('funcNodeName')), '/providers/Microsoft.ManagedIdentity/Identities/default'), '2015-08-31-PREVIEW').principalId]",
             "permissions": {
               "secrets": [
                 "list",
